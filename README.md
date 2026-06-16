@@ -1,42 +1,79 @@
-# Azure Landing Zone Implementation using Terraform
+# Azure Network Landing Zone using Terraform
 
 ## Overview
 
-This project demonstrates the implementation of an Azure Landing Zone using Terraform following Infrastructure as Code (IaC) principles. The Landing Zone provides a secure, scalable, and governed cloud foundation for deploying enterprise workloads on Microsoft Azure.
+This project demonstrates the provisioning of a secure Azure Network Landing Zone using Terraform. The infrastructure is deployed using Infrastructure as Code (IaC) principles and provides a reusable cloud foundation for hosting workloads in Microsoft Azure.
 
-The solution establishes a standardized cloud environment with governance, networking, security, and resource organization best practices.
+The solution includes networking, security, remote administration, and connectivity components commonly used in Azure environments.
 
----
-
-## Objectives
-
-* Automate Azure infrastructure provisioning using Terraform.
-* Establish a scalable cloud foundation.
-* Implement governance and security controls.
-* Organize resources using Azure best practices.
-* Enable future workload deployments in a controlled environment.
 
 ---
 
-## Architecture
+## Infrastructure Components
 
-Azure Landing Zone
+### Resource Group (RG)
 
-├── Management Groups
+* Logical container for Azure resources.
 
-├── Resource Groups
+### Virtual Network (VNet)
 
-├── Virtual Networks
+* Provides network isolation and connectivity.
+* CIDR Block: `10.0.0.0/16`
 
-├── Network Security Controls
+### Subnets
 
-├── Role-Based Access Control (RBAC)
+* Public Subnet
+* Private Subnet
+* Gateway Subnet
 
-├── Azure Policies
+### Network Security Group (NSG)
 
-├── Monitoring & Logging
+* Controls inbound and outbound traffic.
+* Implements security rules for Azure resources.
 
-└── Shared Services
+### Public IP
+
+* Provides internet accessibility for external connectivity.
+
+### Network Interface Card (NIC)
+
+* Connects virtual machines to Azure Virtual Networks.
+
+### Azure Bastion
+
+* Secure browser-based SSH/RDP access to virtual machines.
+* Eliminates direct exposure of management ports.
+
+### Virtual Machine (Ubuntu)
+
+* Linux VM deployed inside the private subnet.
+
+### VNet Peering
+
+* Enables communication between virtual networks.
+
+---
+
+## Architecture Flow
+
+Internet
+↓
+Public IP
+↓
+Azure Bastion
+↓
+Virtual Network (VNet)
+↓
+Subnet
+↓
+Network Security Group (NSG)
+↓
+Network Interface (NIC)
+↓
+Ubuntu Virtual Machine
+
+Additional Connectivity:
+VNet Peering → Remote Networks
 
 ---
 
@@ -44,67 +81,35 @@ Azure Landing Zone
 
 * Terraform
 * Microsoft Azure
-* Azure Resource Manager (ARM)
-* Azure Virtual Network (VNet)
-* Azure RBAC
-* Azure Policy
-* Azure Monitor
-* Azure Resource Groups
-* Git & GitHub
-
----
-
-## Infrastructure Components
-
-### Resource Organization
-
-* Azure Management Groups
-* Resource Groups
-* Subscription Organization
-
-### Networking
-
-* Virtual Networks (VNets)
-* Subnets
-* Network Security Groups (NSGs)
-* Network Segmentation
-
-### Security & Governance
-
-* Azure RBAC
-* Least Privilege Access Control
-* Azure Policies
-* Security Baseline Configuration
-
-### Monitoring
-
-* Azure Monitor
-* Diagnostic Settings
-* Activity Logs
+* Azure Virtual Network
+* Azure Bastion
+* Azure Network Security Groups
+* Azure Virtual Machines
+* Azure Public IP
+* Azure VNet Peering
+* Linux (Ubuntu)
 
 ---
 
 ## Project Structure
 
 ```text
-azure-landing-zone-terraform/
+azure-network-landing-zone-terraform/
 │
-├── modules/
-│   ├── networking/
-│   ├── security/
-│   ├── governance/
-│   └── monitoring/
+├── Azure-Bastion/
+├── NIC/
+├── NSG/
+├── Public-ip/
+├── RG/
+├── Subnet/
+├── VM/
+├── VNet/
+├── Vnet-peering/
 │
-├── environments/
-│   ├── dev/
-│   ├── test/
-│   └── prod/
-│
-├── main.tf
 ├── provider.tf
 ├── variables.tf
 ├── outputs.tf
-├── terraform.tfvars
+├── main.tf
 └── README.md
 ```
 
@@ -113,8 +118,8 @@ azure-landing-zone-terraform/
 ### Clone Repository
 
 ```bash
-git clone https://github.com/your-username/azure-landing-zone-terraform.git
-cd azure-landing-zone-terraform
+git clone https://github.com/your-username/azure-network-landing-zone-terraform.git
+cd azure-network-landing-zone-terraform
 ```
 
 ### Initialize Terraform
@@ -129,7 +134,7 @@ terraform init
 terraform validate
 ```
 
-### Review Deployment Plan
+### Review Execution Plan
 
 ```bash
 terraform plan
@@ -141,49 +146,59 @@ terraform plan
 terraform apply
 ```
 
+### Destroy Infrastructure
+
+```bash
+terraform destroy
+```
+
 ---
 
 ## Key Features
 
 * Infrastructure as Code (IaC)
-* Reusable Terraform Modules
-* Secure Networking Architecture
-* Azure Governance Controls
-* Scalable Cloud Foundation
+* Modular Azure Resource Deployment
+* Secure Network Segmentation
+* Azure Bastion Access
+* VNet Peering Configuration
+* Reusable Terraform Configuration
 * Automated Infrastructure Provisioning
 
 ---
 
 ## Challenges Faced
 
-* Terraform state management
-* Azure resource dependency handling
-* Network security configuration
-* Governance and policy implementation
-* Resource organization and naming standards
+* Azure VM SKU availability issues.
+* NSG configuration and SSH access troubleshooting.
+* Network Security Group association.
+* Public IP accessibility validation.
+* Terraform resource dependencies.
 
 ---
 
 ## Future Enhancements
 
-* CI/CD using GitHub Actions
-* Terraform Remote State Backend
-* Azure Key Vault Integration
-* Azure Kubernetes Service (AKS)
-* Monitoring with Azure Monitor & Log Analytics
-* Multi-Environment Deployments
+* Azure Monitor Integration
+* Log Analytics Workspace
+* Azure Key Vault
+* Azure Policy
+* GitHub Actions CI/CD
+* AKS (Azure Kubernetes Service)
+* Terraform Remote State Storage
 
 ---
 
 ## Learning Outcomes
 
-Through this project, I gained hands-on experience in:
+Through this project, I gained hands-on experience with:
 
-* Azure Cloud Architecture
-* Infrastructure as Code (Terraform)
-* Cloud Governance
+* Terraform Infrastructure as Code
 * Azure Networking
-* Security Best Practices
-* Resource Management
-* DevOps Fundamentals
+* Azure Security Concepts
+* Virtual Network Design
+* Bastion Host Configuration
+* VNet Peering
+* Linux VM Administration
+* Cloud Infrastructure Deployment
+
 
